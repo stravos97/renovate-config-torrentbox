@@ -82,6 +82,31 @@
       "prBodyNotes": ["Auto-merging digest update for security"]
     },
     {
+      "description": "Auto-merge patch updates for StatefulSet containers",
+      "matchFileNames": ["kubernetes/apps-statefulset/**"],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["at any time"],
+      "prBodyNotes": ["Auto-merging patch update - ArgoCD will deploy via sync workflow"]
+    },
+    {
+      "description": "Auto-merge minor updates for stable services",
+      "matchFileNames": ["kubernetes/apps-statefulset/**"],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "matchPackagePatterns": [
+        "^ghcr.io/hotio/",
+        "^ghcr.io/gethomepage/",
+        "^ghcr.io/flaresolverr/"
+      ],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["after 2am and before 5am"],
+      "prBodyNotes": ["Auto-merging minor update - ArgoCD will deploy via sync workflow"]
+    },
+    {
       "description": "StatefulSet major updates need careful handling",
       "matchFileNames": ["kubernetes/apps-statefulset/**"],
       "matchUpdateTypes": ["major"],

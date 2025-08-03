@@ -6,7 +6,6 @@
     "docker:enableMajor",
     "docker:pinDigests",
     "helpers:pinGitHubActionDigests",
-    ":automergeDisabled",
     ":dependencyDashboard"
   ],
   "ignorePaths": [
@@ -60,5 +59,8 @@
   ],
   "prConcurrentLimit": 3,
   "prHourlyLimit": 1,
-  "labels": ["dependencies", "containers", "gitops"]
+  "labels": ["dependencies", "containers", "gitops"],
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "automergeSchedule": ["after 1am and before 6am every weekday", "every weekend"]
 }
