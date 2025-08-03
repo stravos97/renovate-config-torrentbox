@@ -17,6 +17,7 @@
     "**/values.yaml"
   ],
   "enabledManagers": ["kubernetes", "github-actions"],
+  "ignoredManagers": ["terraform", "terraform-version"],
   "kubernetes": {
     "fileMatch": [
       "kubernetes/apps-statefulset/**/*.yaml",
