@@ -1,0 +1,85 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Group container updates by registry for TorrentBox",
+  "packageRules": [
+    {
+      "description": "GitHub Container Registry (ghcr.io) images",
+      "matchPackagePatterns": ["^ghcr\\.io/"],
+      "groupName": "ghcr-images",
+      "groupSlug": "ghcr",
+      "prBodyNotes": [
+        "Updates from GitHub Container Registry (ghcr.io)"
+      ]
+    },
+    {
+      "description": "Docker Hub official images",
+      "matchPackagePatterns": [
+        "^docker\\.io/",
+        "^[^/]+/[^/]+$"
+      ],
+      "excludePackagePatterns": [
+        "^(lldap|intel|qmcgaw|golift|huntarr)/"
+      ],
+      "groupName": "dockerhub-images",
+      "groupSlug": "dockerhub",
+      "prBodyNotes": [
+        "Updates from Docker Hub"
+      ]
+    },
+    {
+      "description": "Vendor-specific registries",
+      "matchPackagePatterns": [
+        "^lldap/",
+        "^intel/",
+        "^qmcgaw/",
+        "^golift/",
+        "^huntarr/"
+      ],
+      "groupName": "vendor-images",
+      "groupSlug": "vendor",
+      "schedule": ["on the first day of the month"],
+      "prBodyNotes": [
+        "Updates from vendor-specific registries",
+        "These may have less frequent releases"
+      ]
+    },
+    {
+      "description": "Hotio maintained images",
+      "matchPackagePatterns": ["^ghcr\\.io/hotio/"],
+      "groupName": "hotio-images",
+      "groupSlug": "hotio",
+      "prBodyNotes": [
+        "Hotio maintains consistent update patterns",
+        "All images use similar base layers"
+      ]
+    },
+    {
+      "description": "Group all patch updates",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "patch-updates",
+      "groupSlug": "patches",
+      "automerge": true
+    },
+    {
+      "description": "Group all minor updates",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor-updates",
+      "groupSlug": "minor"
+    },
+    {
+      "description": "Major updates ungrouped for individual attention",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "prBodyColumns": [
+        "Package",
+        "Type",
+        "Update",
+        "Change",
+        "Pending"
+      ]
+    }
+  ]
+}

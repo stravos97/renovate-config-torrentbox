@@ -1,0 +1,83 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Container security policies for TorrentBox",
+  "vulnerabilityAlerts": {
+    "labels": ["security", "urgent"],
+    "assignees": ["@stravos97"]
+  },
+  "packageRules": [
+    {
+      "description": "Security patches for auth/network components - expedited",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": [
+        "authelia",
+        "traefik",
+        "cert-manager",
+        "lldap",
+        "metallb"
+      ],
+      "prPriority": 10,
+      "automerge": true,
+      "schedule": ["at any time"],
+      "commitMessagePrefix": "fix(security):",
+      "prBodyNotes": [
+        "### Security Update",
+        "Auto-merging security patch",
+        "Monitor ArgoCD sync status after merge"
+      ]
+    },
+    {
+      "description": "Replace images using 'latest' tag",
+      "matchPackageNames": [
+        "huntarr/huntarr",
+        "golift/notifiarr",
+        "golift/unpackerr",
+        "ghcr.io/cleanuparr/cleanuparr"
+      ],
+      "prBodyNotes": [
+        "### Latest Tag Warning",
+        "This image uses 'latest' tag which is unstable",
+        "Consider pinning to specific version after testing",
+        "Check for official versioned releases"
+      ],
+      "prPriority": 5
+    },
+    {
+      "description": "Intel GPU plugin - hardware compatibility",
+      "matchPackageNames": ["intel/intel-gpu-plugin"],
+      "allowedVersions": "< 1.0.0",
+      "prBodyNotes": [
+        "### GPU Plugin Update",
+        "Verify compatibility with Intel HD Graphics 530",
+        "Test hardware acceleration after update",
+        "Check node feature discovery labels"
+      ]
+    },
+    {
+      "description": "Authentication system updates",
+      "matchPackageNames": [
+        "lldap/lldap",
+        "ghcr.io/authelia/authelia"
+      ],
+      "dependencyDashboardApproval": true,
+      "groupName": "auth-stack",
+      "prBodyNotes": [
+        "### Authentication System Update",
+        "- Test LDAP connectivity",
+        "- Verify user login flow",
+        "- Check Traefik middleware integration",
+        "- Validate session persistence"
+      ]
+    },
+    {
+      "description": "CVE patches - highest priority",
+      "matchPackagePatterns": [".*"],
+      "matchVulnerabilityAlerts": true,
+      "prPriority": 15,
+      "labels": ["security", "CVE"],
+      "schedule": ["at any time"],
+      "rangeStrategy": "update-lockfile"
+    }
+  ]
+}

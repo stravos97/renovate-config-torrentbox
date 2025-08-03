@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "TorrentBox Kubernetes container image management base preset",
+  "extends": [
+    "config:best-practices",
+    "docker:enableMajor",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests",
+    ":automergeDisabled",
+    ":dependencyDashboard"
+  ],
+  "ignorePaths": [
+    "**/scripts/ytt/logs/**",
+    "**/ansible_management_macos/**",
+    "**/helm-values/**",
+    "**/Chart.yaml",
+    "**/values.yaml"
+  ],
+  "enabledManagers": ["kubernetes", "github-actions"],
+  "kubernetes": {
+    "fileMatch": [
+      "kubernetes/apps-statefulset/**/*.yaml",
+      "kubernetes/base/**/*.yaml",
+      "kubernetes/infrastructure/**/*.yaml"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Disable all Helm updates",
+      "matchManagers": ["helm-requirements", "helm-values", "helmfile", "helmv3"],
+      "enabled": false
+    },
+    {
+      "description": "Block 'latest' tags - force specific versions",
+      "matchDatasources": ["docker"],
+      "matchCurrentValue": "/^latest$/",
+      "enabled": false
+    },
+    {
+      "description": "Infrastructure images - manual approval",
+      "matchFileNames": ["kubernetes/infrastructure/**"],
+      "matchPackageNames": [
+        "ghcr.io/authelia/authelia",
+        "traefik",
+        "metallb",
+        "cert-manager"
+      ],
+      "dependencyDashboardApproval": true,
+      "schedule": ["before 6am on Monday"],
+      "groupName": "infrastructure-images"
+    },
+    {
+      "description": "StatefulSet container updates",
+      "matchFileNames": ["kubernetes/apps-statefulset/**"],
+      "matchDatasources": ["docker"],
+      "groupName": "statefulset-apps",
+      "commitMessagePrefix": "fix(containers):"
+    }
+  ],
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 1,
+  "labels": ["dependencies", "containers", "gitops"],
+  "postUpgradeTasks": {
+    "commands": ["echo 'Container updates require ArgoCD sync'"],
+    "fileFilters": ["kubernetes/**/*.yaml"]
+  }
+}

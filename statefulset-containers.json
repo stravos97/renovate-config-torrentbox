@@ -1,0 +1,97 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "StatefulSet container image management for TorrentBox",
+  "packageRules": [
+    {
+      "description": "Media management apps (arr-stack)",
+      "matchPackageNames": [
+        "ghcr.io/hotio/sonarr",
+        "ghcr.io/hotio/radarr",
+        "ghcr.io/hotio/lidarr",
+        "ghcr.io/hotio/bazarr"
+      ],
+      "groupName": "arr-stack-images",
+      "schedule": ["after 10pm every weekday"],
+      "prBodyNotes": [
+        "### Media Management Stack Update",
+        "- Verify API compatibility between arr services",
+        "- Check for database schema changes",
+        "- Review release notes for breaking changes"
+      ]
+    },
+    {
+      "description": "Download clients with VPN sidecar",
+      "matchPackageNames": [
+        "ghcr.io/hotio/qbittorrent",
+        "ghcr.io/hotio/sabnzbd",
+        "qmcgaw/gluetun"
+      ],
+      "groupName": "download-vpn-images",
+      "prBodyNotes": [
+        "### Download Client Update Checklist",
+        "- Test VPN connectivity after update",
+        "- Verify kill switch functionality",
+        "- Check port forwarding settings",
+        "- Validate DNS resolution"
+      ]
+    },
+    {
+      "description": "Media servers requiring transcoding checks",
+      "matchPackageNames": [
+        "docker.io/jellyfin/jellyfin",
+        "ghcr.io/hotio/plex"
+      ],
+      "groupName": "media-server-images",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "prBodyNotes": [
+        "### Media Server Update",
+        "- Verify Intel GPU hardware acceleration",
+        "- Test transcoding functionality",
+        "- Check client compatibility",
+        "- Review database migration requirements"
+      ]
+    },
+    {
+      "description": "Indexer services",
+      "matchPackageNames": [
+        "ghcr.io/hotio/prowlarr",
+        "ghcr.io/hotio/jackett"
+      ],
+      "groupName": "indexer-images",
+      "schedule": ["after 11pm on Friday"]
+    },
+    {
+      "description": "Support services",
+      "matchPackageNames": [
+        "ghcr.io/flaresolverr/flaresolverr",
+        "ghcr.io/gethomepage/homepage",
+        "ghcr.io/wizarrrr/wizarr",
+        "docker.io/fallenbagel/jellyseerr",
+        "ghcr.io/hotio/overseerr"
+      ],
+      "groupName": "support-service-images"
+    },
+    {
+      "description": "Auto-merge container digests only",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["at any time"],
+      "prBodyNotes": ["Auto-merging digest update for security"]
+    },
+    {
+      "description": "StatefulSet major updates need careful handling",
+      "matchFileNames": ["kubernetes/apps-statefulset/**"],
+      "matchUpdateTypes": ["major"],
+      "prBodyNotes": [
+        "### StatefulSet Major Update Warning",
+        "- Review persistent volume compatibility",
+        "- Check for configuration format changes",
+        "- Plan rolling update strategy",
+        "- Consider backup before applying"
+      ]
+    }
+  ]
+}
