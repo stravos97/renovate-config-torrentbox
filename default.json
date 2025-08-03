@@ -60,9 +60,5 @@
   ],
   "prConcurrentLimit": 3,
   "prHourlyLimit": 1,
-  "labels": ["dependencies", "containers", "gitops"],
-  "postUpgradeTasks": {
-    "commands": ["echo 'Container updates require ArgoCD sync'"],
-    "fileFilters": ["kubernetes/**/*.yaml"]
-  }
+  "labels": ["dependencies", "containers", "gitops"]
 }
