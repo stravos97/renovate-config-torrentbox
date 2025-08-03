@@ -16,6 +16,8 @@ Base configuration that:
 - Enables Kubernetes manifest scanning
 - Sets up dependency dashboard
 - Configures rate limiting (3 concurrent, 1 hourly)
+- Enables platformAutomerge for approved updates
+- Schedules automerge for low-traffic hours (1-6am weekdays, weekends)
 
 ### statefulset-containers
 Specialized handling for StatefulSet applications:
@@ -23,6 +25,8 @@ Specialized handling for StatefulSet applications:
 - Groups download clients with VPN sidecars
 - Handles media servers with hardware acceleration
 - Auto-merges digest-only updates
+- Auto-merges patch updates for all containers (security fixes)
+- Auto-merges minor updates for stable services (hotio, homepage, flaresolverr)
 - Adds PR checklists for major updates
 
 ### container-security
@@ -75,6 +79,22 @@ Or use with `local>` prefix for same-platform repositories:
 - **Security First**: CVE patches are prioritized and auto-merged
 - **GitOps Compatible**: Designed for ArgoCD workflows
 - **Smart Grouping**: Logical grouping by purpose and registry
+- **Automerge Enabled**: Safe updates merge automatically during low-traffic hours
+- **Progressive Rollout**: Patch → Minor → Major update strategy
+
+## Automerge Strategy
+
+The presets implement a progressive automerge strategy:
+
+| Update Type | Containers | Schedule | Approval |
+|------------|------------|----------|----------|
+| Digest | All | Immediate | Auto |
+| Patch | All | Immediate | Auto |
+| Minor | Stable services¹ | 1-6am weekdays, weekends | Auto |
+| Minor | Other services | N/A | Manual |
+| Major | All | N/A | Manual |
+
+¹ Stable services: hotio images, homepage, flaresolverr
 
 ## Example Configuration
 
